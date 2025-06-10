@@ -1,0 +1,9 @@
+G:\code\Burdukov-kurs\Burdukov-kurs\bin\Debug\Burdukov-kurs.exe
+G:\code\Burdukov-kurs\Burdukov-kurs\bin\Debug\Burdukov-kurs.pdb
+G:\code\Burdukov-kurs\Burdukov-kurs\obj\Debug\Burdukov-kurs.csproj.AssemblyReference.cache
+G:\code\Burdukov-kurs\Burdukov-kurs\obj\Debug\Burdukov_kurs.Properties.Resources.resources
+G:\code\Burdukov-kurs\Burdukov-kurs\obj\Debug\Burdukov-kurs.csproj.GenerateResource.cache
+G:\code\Burdukov-kurs\Burdukov-kurs\obj\Debug\Burdukov-kurs.csproj.CoreCompileInputs.cache
+G:\code\Burdukov-kurs\Burdukov-kurs\obj\Debug\Burdukov-kurs.exe
+G:\code\Burdukov-kurs\Burdukov-kurs\obj\Debug\Burdukov-kurs.pdb
+G:\code\Burdukov-kurs\Burdukov-kurs\obj\Debug\Burdukov_kurs.MainForm.resources

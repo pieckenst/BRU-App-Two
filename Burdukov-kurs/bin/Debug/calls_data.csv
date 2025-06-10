@@ -1,0 +1,2 @@
+SubscriberName,SubscriberNumber,CorrespondentNumber,CallType,CallTime,Duration,Cost,TariffId,ServiceId
+"Иванов Иван Иваныч","+37525000000","+37525000001",Incoming,2025-06-10 16:50:04,50,5.00,d2fe1f15-3077-4ff0-ab8a-811d1b23b865,2580d6c8-13f8-40fc-8126-06217db8b7e5
