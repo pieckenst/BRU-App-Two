@@ -26,6 +26,7 @@ namespace Burdukov_kurs
             this.txtDescription = new System.Windows.Forms.TextBox();
             this.btnAddTariff = new System.Windows.Forms.Button();
             this.btnEditTariff = new System.Windows.Forms.Button();
+            this.btnSaveChanges = new System.Windows.Forms.Button();
             this.btnDeleteTariff = new System.Windows.Forms.Button();
             this.btnClearFields = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTariffs)).BeginInit();
@@ -123,6 +124,17 @@ namespace Burdukov_kurs
             this.btnEditTariff.UseVisualStyleBackColor = true;
             this.btnEditTariff.Click += new System.EventHandler(this.btnEditTariff_Click);
             // 
+            // btnSaveChanges
+            // 
+            this.btnSaveChanges.Enabled = false;
+            this.btnSaveChanges.Location = new System.Drawing.Point(362, 228);
+            this.btnSaveChanges.Name = "btnSaveChanges";
+            this.btnSaveChanges.Size = new System.Drawing.Size(110, 23);
+            this.btnSaveChanges.TabIndex = 9;
+            this.btnSaveChanges.Text = "Сохранить";
+            this.btnSaveChanges.UseVisualStyleBackColor = true;
+            this.btnSaveChanges.Click += new System.EventHandler(this.btnSaveChanges_Click);
+            // 
             // btnDeleteTariff
             // 
             this.btnDeleteTariff.Enabled = false;
@@ -150,6 +162,7 @@ namespace Burdukov_kurs
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(484, 296);
             this.Controls.Add(this.btnClearFields);
+            this.Controls.Add(this.btnSaveChanges);
             this.Controls.Add(this.btnDeleteTariff);
             this.Controls.Add(this.btnEditTariff);
             this.Controls.Add(this.btnAddTariff);
@@ -184,6 +197,7 @@ namespace Burdukov_kurs
         private System.Windows.Forms.TextBox txtDescription;
         private System.Windows.Forms.Button btnAddTariff;
         private System.Windows.Forms.Button btnEditTariff;
+        private System.Windows.Forms.Button btnSaveChanges;
         private System.Windows.Forms.Button btnDeleteTariff;
         private System.Windows.Forms.Button btnClearFields;
     }

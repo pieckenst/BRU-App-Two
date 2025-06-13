@@ -50,6 +50,18 @@
     <Compile Include="AddCallForm.Designer.cs">
       <DependentUpon>AddCallForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="AddServiceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddServiceForm.Designer.cs">
+      <DependentUpon>AddServiceForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AddTariffForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddTariffForm.Designer.cs">
+      <DependentUpon>AddTariffForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Call.cs" />
     <Compile Include="CallManagementForm.cs">
       <SubType>Form</SubType>
@@ -117,6 +129,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ServiceManagementForm.resx">
+      <DependentUpon>ServiceManagementForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

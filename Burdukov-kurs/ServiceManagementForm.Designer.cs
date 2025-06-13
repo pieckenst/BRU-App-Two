@@ -26,11 +26,9 @@ namespace Burdukov_kurs
             this.txtServiceDescription = new System.Windows.Forms.TextBox();
             this.btnAddService = new System.Windows.Forms.Button();
             this.btnEditService = new System.Windows.Forms.Button();
+            this.btnSaveChanges = new System.Windows.Forms.Button();
             this.btnDeleteService = new System.Windows.Forms.Button();
             this.btnClearFields = new System.Windows.Forms.Button();
-            // Optional: ComboBox for Tariffs if services are linked to tariffs
-            // this.lblTariff = new System.Windows.Forms.Label();
-            // this.cmbTariffs = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvServices)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numServicePrice)).BeginInit();
             this.SuspendLayout();
@@ -54,7 +52,7 @@ namespace Burdukov_kurs
             this.lblServiceName.AutoSize = true;
             this.lblServiceName.Location = new System.Drawing.Point(12, 175);
             this.lblServiceName.Name = "lblServiceName";
-            this.lblServiceName.Size = new System.Drawing.Size(94, 13);
+            this.lblServiceName.Size = new System.Drawing.Size(96, 13);
             this.lblServiceName.TabIndex = 1;
             this.lblServiceName.Text = "Название услуги:";
             // 
@@ -107,7 +105,7 @@ namespace Burdukov_kurs
             // 
             // btnAddService
             // 
-            this.btnAddService.Location = new System.Drawing.Point(362, 170);
+            this.btnAddService.Location = new System.Drawing.Point(351, 170);
             this.btnAddService.Name = "btnAddService";
             this.btnAddService.Size = new System.Drawing.Size(110, 23);
             this.btnAddService.TabIndex = 7;
@@ -118,7 +116,7 @@ namespace Burdukov_kurs
             // btnEditService
             // 
             this.btnEditService.Enabled = false;
-            this.btnEditService.Location = new System.Drawing.Point(362, 199);
+            this.btnEditService.Location = new System.Drawing.Point(351, 199);
             this.btnEditService.Name = "btnEditService";
             this.btnEditService.Size = new System.Drawing.Size(110, 23);
             this.btnEditService.TabIndex = 8;
@@ -126,23 +124,34 @@ namespace Burdukov_kurs
             this.btnEditService.UseVisualStyleBackColor = true;
             this.btnEditService.Click += new System.EventHandler(this.btnEditService_Click);
             // 
+            // btnSaveChanges
+            // 
+            this.btnSaveChanges.Enabled = false;
+            this.btnSaveChanges.Location = new System.Drawing.Point(351, 228);
+            this.btnSaveChanges.Name = "btnSaveChanges";
+            this.btnSaveChanges.Size = new System.Drawing.Size(110, 23);
+            this.btnSaveChanges.TabIndex = 9;
+            this.btnSaveChanges.Text = "Сохранить";
+            this.btnSaveChanges.UseVisualStyleBackColor = true;
+            this.btnSaveChanges.Click += new System.EventHandler(this.btnSaveChanges_Click);
+            // 
             // btnDeleteService
             // 
             this.btnDeleteService.Enabled = false;
-            this.btnDeleteService.Location = new System.Drawing.Point(362, 228);
+            this.btnDeleteService.Location = new System.Drawing.Point(351, 257);
             this.btnDeleteService.Name = "btnDeleteService";
             this.btnDeleteService.Size = new System.Drawing.Size(110, 23);
-            this.btnDeleteService.TabIndex = 9;
+            this.btnDeleteService.TabIndex = 10;
             this.btnDeleteService.Text = "Удалить";
             this.btnDeleteService.UseVisualStyleBackColor = true;
             this.btnDeleteService.Click += new System.EventHandler(this.btnDeleteService_Click);
             // 
             // btnClearFields
             // 
-            this.btnClearFields.Location = new System.Drawing.Point(362, 257);
+            this.btnClearFields.Location = new System.Drawing.Point(351, 286);
             this.btnClearFields.Name = "btnClearFields";
             this.btnClearFields.Size = new System.Drawing.Size(110, 23);
-            this.btnClearFields.TabIndex = 10;
+            this.btnClearFields.TabIndex = 11;
             this.btnClearFields.Text = "Очистить поля";
             this.btnClearFields.UseVisualStyleBackColor = true;
             this.btnClearFields.Click += new System.EventHandler(this.btnClearFields_Click);
@@ -151,8 +160,9 @@ namespace Burdukov_kurs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(484, 296);
+            this.ClientSize = new System.Drawing.Size(488, 341);
             this.Controls.Add(this.btnClearFields);
+            this.Controls.Add(this.btnSaveChanges);
             this.Controls.Add(this.btnDeleteService);
             this.Controls.Add(this.btnEditService);
             this.Controls.Add(this.btnAddService);
@@ -187,6 +197,7 @@ namespace Burdukov_kurs
         private System.Windows.Forms.TextBox txtServiceDescription;
         private System.Windows.Forms.Button btnAddService;
         private System.Windows.Forms.Button btnEditService;
+        private System.Windows.Forms.Button btnSaveChanges;
         private System.Windows.Forms.Button btnDeleteService;
         private System.Windows.Forms.Button btnClearFields;
         // private System.Windows.Forms.Label lblTariff; // Optional

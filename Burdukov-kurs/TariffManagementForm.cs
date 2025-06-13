@@ -110,60 +110,57 @@ namespace Burdukov_kurs
             numPricePerMinute.Value = 0;
             txtDescription.Clear();
             currentEditingTariff = null;
-            btnAddTariff.Text = "Добавить";
+            
+            // Reset button states
             btnEditTariff.Enabled = false;
+            btnSaveChanges.Enabled = false;
             btnDeleteTariff.Enabled = false;
+            
+            // Reset input field states
+            txtTariffName.ReadOnly = true;
+            numPricePerMinute.Enabled = false;
+            txtDescription.ReadOnly = true;
+            
             dgvTariffs.ClearSelection();
         }
 
         private void btnAddTariff_Click(object sender, EventArgs e)
         {
-            string name = txtTariffName.Text.Trim();
-            decimal price = numPricePerMinute.Value;
-            string description = txtDescription.Text.Trim();
-
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                MessageBox.Show("Название тарифа не может быть пустым.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtTariffName.Focus();
-                return;
-            }
-
-            if (price <= 0)
-            {
-                MessageBox.Show("Цена за минуту должна быть больше нуля.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                numPricePerMinute.Focus();
-                return;
-            }
-
-            if (currentEditingTariff == null) // Добавление нового тарифа
-            {
-                if (allTariffs.Any(t => t.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
-                {
-                    MessageBox.Show("Тариф с таким названием уже существует.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtTariffName.Focus();
-                    return;
-                }
-                allTariffs.Add(new Tariff(name, price, description));
-                MessageBox.Show("Тариф успешно добавлен.", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else // Редактирование существующего тарифа
-            {
-                if (allTariffs.Any(t => t.Name.Equals(name, StringComparison.OrdinalIgnoreCase) && t.Id != currentEditingTariff.Id))
-                {
-                    MessageBox.Show("Другой тариф с таким названием уже существует.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtTariffName.Focus();
-                    return;
-                }
-                currentEditingTariff.Name = name;
-                currentEditingTariff.PricePerMinute = price;
-                currentEditingTariff.Description = description;
-                MessageBox.Show("Тариф успешно обновлен.", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-
-            SaveTariffs();
-            BindDataToGrid();
+            // Always clear input fields when adding new tariff
             ClearInputFields();
+            
+            // Open the add dialog
+            using (var addForm = new AddTariffForm())
+            {
+                if (addForm.ShowDialog(this) == DialogResult.OK)
+                {
+                    if (allTariffs.Any(t => t.Name.Equals(addForm.TariffName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        MessageBox.Show("Тариф с таким названием уже существует.", "Ошибка ввода", 
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    // Add new tariff
+                    var newTariff = new Tariff(addForm.TariffName, addForm.PricePerMinute, addForm.Description);
+                    allTariffs.Add(newTariff);
+                    
+                    // Save and refresh
+                    SaveTariffs();
+                    BindDataToGrid();
+                    
+                    // Select the newly added tariff
+                    var index = allTariffs.IndexOf(newTariff);
+                    if (index >= 0)
+                    {
+                        dgvTariffs.Rows[index].Selected = true;
+                        dgvTariffs.FirstDisplayedScrollingRowIndex = index;
+                    }
+                    
+                    MessageBox.Show("Тариф успешно добавлен.", "Успех", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
         }
 
         private void btnEditTariff_Click(object sender, EventArgs e)
@@ -171,12 +168,24 @@ namespace Burdukov_kurs
             if (dgvTariffs.SelectedRows.Count > 0)
             {
                 currentEditingTariff = (Tariff)dgvTariffs.SelectedRows[0].DataBoundItem;
+                
+                // Load the selected tariff into the input fields for editing
                 txtTariffName.Text = currentEditingTariff.Name;
                 numPricePerMinute.Value = currentEditingTariff.PricePerMinute;
                 txtDescription.Text = currentEditingTariff.Description;
-                btnAddTariff.Text = "Сохранить";
-                btnEditTariff.Enabled = true; // Остается активной для отмены
+                
+                // Enable/disable appropriate buttons
+                btnEditTariff.Enabled = false; // Disable edit button while editing
+                btnSaveChanges.Enabled = true; // Enable save button
                 btnDeleteTariff.Enabled = true;
+                
+                // Enable input fields for editing
+                txtTariffName.ReadOnly = false;
+                numPricePerMinute.Enabled = true;
+                txtDescription.ReadOnly = false;
+                
+                // Set focus to the name field
+                txtTariffName.Focus();
             }
         }
 
@@ -197,7 +206,7 @@ namespace Burdukov_kurs
             }
             else
             {
-                 MessageBox.Show("Выберите тариф для удаления.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Выберите тариф для удаления.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -211,18 +220,84 @@ namespace Burdukov_kurs
             if (dgvTariffs.SelectedRows.Count > 0)
             {
                 currentEditingTariff = (Tariff)dgvTariffs.SelectedRows[0].DataBoundItem;
+                
+                // Load the selected tariff into the input fields
                 txtTariffName.Text = currentEditingTariff.Name;
                 numPricePerMinute.Value = currentEditingTariff.PricePerMinute;
                 txtDescription.Text = currentEditingTariff.Description;
-                btnAddTariff.Text = "Сохранить"; // Меняем текст кнопки, если выбран тариф для редактирования
+                
+                // Enable edit and delete buttons
                 btnEditTariff.Enabled = true;
                 btnDeleteTariff.Enabled = true;
+                btnSaveChanges.Enabled = false; // Disable save button initially
+                
+                // Make fields read-only until edit is clicked
+                txtTariffName.ReadOnly = true;
+                numPricePerMinute.Enabled = false;
+                txtDescription.ReadOnly = true;
             }
             else
             {
-                // Если выделение снято (например, после удаления или очистки), сбрасываем поля
-                // ClearInputFields(); // Это может быть излишним, если SelectionChanged срабатывает при ClearSelection
+                // Clear input fields when no row is selected
+                ClearInputFields();
             }
+        }
+        
+        private void btnSaveChanges_Click(object sender, EventArgs e)
+        {
+            if (currentEditingTariff == null) return;
+            
+            string newName = txtTariffName.Text.Trim();
+            decimal newPrice = numPricePerMinute.Value;
+            string newDescription = txtDescription.Text.Trim();
+            
+            // Validate input
+            if (string.IsNullOrWhiteSpace(newName))
+            {
+                MessageBox.Show("Название тарифа не может быть пустым.", "Ошибка ввода", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtTariffName.Focus();
+                return;
+            }
+            
+            if (newPrice <= 0)
+            {
+                MessageBox.Show("Цена за минуту должна быть больше нуля.", "Ошибка ввода", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                numPricePerMinute.Focus();
+                return;
+            }
+            
+            // Check for duplicate name (excluding current tariff)
+            if (allTariffs.Any(t => t.Id != currentEditingTariff.Id && 
+                                  t.Name.Equals(newName, StringComparison.OrdinalIgnoreCase)))
+            {
+                MessageBox.Show("Другой тариф с таким названием уже существует.", "Ошибка ввода", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtTariffName.Focus();
+                return;
+            }
+            
+            // Update the tariff
+            currentEditingTariff.Name = newName;
+            currentEditingTariff.PricePerMinute = newPrice;
+            currentEditingTariff.Description = newDescription;
+            
+            // Save changes
+            SaveTariffs();
+            BindDataToGrid();
+            
+            // Reset UI
+            btnSaveChanges.Enabled = false;
+            btnEditTariff.Enabled = true;
+            
+            // Make fields read-only again
+            txtTariffName.ReadOnly = true;
+            numPricePerMinute.Enabled = false;
+            txtDescription.ReadOnly = true;
+            
+            MessageBox.Show("Изменения сохранены.", "Успех", 
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

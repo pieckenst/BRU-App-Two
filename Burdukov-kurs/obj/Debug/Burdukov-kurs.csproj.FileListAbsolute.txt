@@ -7,3 +7,4 @@ G:\code\Burdukov-kurs\Burdukov-kurs\obj\Debug\Burdukov-kurs.csproj.CoreCompileIn
 G:\code\Burdukov-kurs\Burdukov-kurs\obj\Debug\Burdukov-kurs.exe
 G:\code\Burdukov-kurs\Burdukov-kurs\obj\Debug\Burdukov-kurs.pdb
 G:\code\Burdukov-kurs\Burdukov-kurs\obj\Debug\Burdukov_kurs.MainForm.resources
+G:\code\Burdukov-kurs\Burdukov-kurs\obj\Debug\Burdukov_kurs.ServiceManagementForm.resources

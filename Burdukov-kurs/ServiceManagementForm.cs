@@ -111,54 +111,57 @@ namespace Burdukov_kurs
             numServicePrice.Value = 0;
             txtServiceDescription.Clear();
             currentEditingService = null;
-            btnAddService.Text = "Добавить";
+            
+            // Reset button states
             btnEditService.Enabled = false;
+            btnSaveChanges.Enabled = false;
             btnDeleteService.Enabled = false;
+            
+            // Reset input field states
+            txtServiceName.ReadOnly = true;
+            numServicePrice.Enabled = false;
+            txtServiceDescription.ReadOnly = true;
+            
             dgvServices.ClearSelection();
         }
 
         private void btnAddService_Click(object sender, EventArgs e)
         {
-            string name = txtServiceName.Text.Trim();
-            decimal price = numServicePrice.Value;
-            string description = txtServiceDescription.Text.Trim();
-
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                MessageBox.Show("Название услуги не может быть пустым.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtServiceName.Focus();
-                return;
-            }
-            // Price can be 0 for free services, or validate as needed
-
-            if (currentEditingService == null) // Add new service
-            {
-                if (allServices.Any(s => s.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
-                {
-                    MessageBox.Show("Услуга с таким названием уже существует.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtServiceName.Focus();
-                    return;
-                }
-                allServices.Add(new OperatorService(name, price, description));
-                MessageBox.Show("Услуга успешно добавлена.", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else // Edit existing service
-            {
-                if (allServices.Any(s => s.Name.Equals(name, StringComparison.OrdinalIgnoreCase) && s.Id != currentEditingService.Id))
-                {
-                    MessageBox.Show("Другая услуга с таким названием уже существует.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtServiceName.Focus();
-                    return;
-                }
-                currentEditingService.Name = name;
-                currentEditingService.Price = price;
-                currentEditingService.Description = description;
-                MessageBox.Show("Услуга успешно обновлена.", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-
-            SaveServices();
-            BindDataToGrid();
+            // Always clear input fields when adding new service
             ClearInputFields();
+            
+            // Open the add dialog
+            using (var addForm = new AddServiceForm())
+            {
+                if (addForm.ShowDialog(this) == DialogResult.OK)
+                {
+                    if (allServices.Any(s => s.Name.Equals(addForm.ServiceName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        MessageBox.Show("Услуга с таким названием уже существует.", "Ошибка ввода", 
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    // Add new service
+                    var newService = new OperatorService(addForm.ServiceName, addForm.Price, addForm.Description);
+                    allServices.Add(newService);
+                    
+                    // Save and refresh
+                    SaveServices();
+                    BindDataToGrid();
+                    
+                    // Select the newly added service
+                    var index = allServices.IndexOf(newService);
+                    if (index >= 0)
+                    {
+                        dgvServices.Rows[index].Selected = true;
+                        dgvServices.FirstDisplayedScrollingRowIndex = index;
+                    }
+                    
+                    MessageBox.Show("Услуга успешно добавлена.", "Успех", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
         }
 
         private void btnEditService_Click(object sender, EventArgs e)
@@ -166,12 +169,24 @@ namespace Burdukov_kurs
             if (dgvServices.SelectedRows.Count > 0)
             {
                 currentEditingService = (OperatorService)dgvServices.SelectedRows[0].DataBoundItem;
+                
+                // Load the selected service into the input fields for editing
                 txtServiceName.Text = currentEditingService.Name;
                 numServicePrice.Value = currentEditingService.Price;
                 txtServiceDescription.Text = currentEditingService.Description;
-                btnAddService.Text = "Сохранить";
-                btnEditService.Enabled = true;
+                
+                // Enable/disable appropriate buttons
+                btnEditService.Enabled = false; // Disable edit button while editing
+                btnSaveChanges.Enabled = true; // Enable save button
                 btnDeleteService.Enabled = true;
+                
+                // Enable input fields for editing
+                txtServiceName.ReadOnly = false;
+                numServicePrice.Enabled = true;
+                txtServiceDescription.ReadOnly = false;
+                
+                // Set focus to the name field
+                txtServiceName.Focus();
             }
         }
 
@@ -187,7 +202,8 @@ namespace Burdukov_kurs
                     SaveServices();
                     BindDataToGrid();
                     ClearInputFields();
-                    MessageBox.Show("Услуга успешно удалена.", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Услуга успешно удалена.", "Успех", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             else
@@ -206,13 +222,76 @@ namespace Burdukov_kurs
             if (dgvServices.SelectedRows.Count > 0)
             {
                 currentEditingService = (OperatorService)dgvServices.SelectedRows[0].DataBoundItem;
+                
+                // Load the selected service into the input fields
                 txtServiceName.Text = currentEditingService.Name;
                 numServicePrice.Value = currentEditingService.Price;
                 txtServiceDescription.Text = currentEditingService.Description;
-                btnAddService.Text = "Сохранить";
+                
+                // Enable edit and delete buttons
                 btnEditService.Enabled = true;
                 btnDeleteService.Enabled = true;
+                btnSaveChanges.Enabled = false; // Disable save button initially
+                
+                // Make fields read-only until edit is clicked
+                txtServiceName.ReadOnly = true;
+                numServicePrice.Enabled = false;
+                txtServiceDescription.ReadOnly = true;
             }
+            else
+            {
+                // Clear input fields when no row is selected
+                ClearInputFields();
+            }
+        }
+        
+        private void btnSaveChanges_Click(object sender, EventArgs e)
+        {
+            if (currentEditingService == null) return;
+            
+            string newName = txtServiceName.Text.Trim();
+            decimal newPrice = numServicePrice.Value;
+            string newDescription = txtServiceDescription.Text.Trim();
+            
+            // Validate input
+            if (string.IsNullOrWhiteSpace(newName))
+            {
+                MessageBox.Show("Название услуги не может быть пустым.", "Ошибка ввода", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtServiceName.Focus();
+                return;
+            }
+            
+            // Check for duplicate name (excluding current service)
+            if (allServices.Any(s => s.Id != currentEditingService.Id && 
+                                   s.Name.Equals(newName, StringComparison.OrdinalIgnoreCase)))
+            {
+                MessageBox.Show("Другая услуга с таким названием уже существует.", "Ошибка ввода", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtServiceName.Focus();
+                return;
+            }
+            
+            // Update the service
+            currentEditingService.Name = newName;
+            currentEditingService.Price = newPrice;
+            currentEditingService.Description = newDescription;
+            
+            // Save changes
+            SaveServices();
+            BindDataToGrid();
+            
+            // Reset UI
+            btnSaveChanges.Enabled = false;
+            btnEditService.Enabled = true;
+            
+            // Make fields read-only again
+            txtServiceName.ReadOnly = true;
+            numServicePrice.Enabled = false;
+            txtServiceDescription.ReadOnly = true;
+            
+            MessageBox.Show("Изменения сохранены.", "Успех", 
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
